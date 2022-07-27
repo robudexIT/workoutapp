@@ -1,0 +1,52 @@
+const Workout = require('../models/Workout')
+const tokenList = require('../config/tokenlist')
+
+
+module.exports.getWorkouts = async(req, res, next) => {
+    const token = req.token
+    try {
+        const workouts  = await Workout.findAll()
+        if(workouts.length == 0){
+            res.status(200).json({message:'No Available Workouts', count:0, token})
+            return
+        }
+        res.status(200).json({message: 'Fetching Workout is successful', count:workouts.length, workouts:workouts,token})
+    }catch(error){
+        console.log(error)
+        res.status(400).json({message:'Fetching Workouts is not succesful', error:error, fetching:false,token})
+    }
+}
+
+module.exports.postWorkout  = async (req, res, next) => {
+    const token = req.token
+    const title = req.body.title 
+    const load = req.body.load 
+    const reps = req.body.reps
+   try {
+       const workout = await Workout.create({title,load, reps})
+       if(workout){
+         console.log('Adding Workout is successful with workId', workout.workoutId)
+         res.status(200).json({message:'Adding Workout is successful', addWorkout: true, workoutId: workout.workoutId,token})
+       }
+   }catch(error){
+      console.log(error)
+      res.status(400).json({message:'Adding Workout is not successfull',addWorkout:false, token})
+   }
+}
+
+module.exports.deleteWorkout = async(req, res, next) => {
+    const workoutId = req.params.workoutId
+    const token = req.token
+    try {
+        const deleteWorkout = await Workout.destroy({where:{workoutId:workoutId}})
+        if(deleteWorkout == 0){
+            res.status(400).json({message: 'Delete Workout failed', deleteWorkout:false, token})
+            return
+        }
+        res.status(200).json({message: 'Deleting workout is successful', deleteWorkout:true, token})
+    }catch(error){
+        console.log(error)
+        res.status(400).json({message: 'Delete Workout failed', deleteWorkout:false,token})
+    }
+
+}
