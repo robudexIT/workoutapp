@@ -60,7 +60,7 @@ module.exports.signinUser = async(req, res, next) => {
         
         tokenList[refreshToken] = token
 
-        const response = {message:'User has successfully signed in', token: `${token} ${refreshToken}`, signin:true}
+        const response = {message:'User has successfully signed in', token: `${token} ${refreshToken}`, signin:true,username:user.username}
         
         console.log(tokenList)
         res.status(200).json(response)
