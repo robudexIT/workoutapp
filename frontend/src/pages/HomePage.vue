@@ -6,12 +6,7 @@
     components: {WorkoutForm, WorkoutDetails},
     data(){
         return {
-            // workouts: [
-            //     {title: 'PushUp',loads:'20KG', reps:100},
-            //     {title: 'PushUp',loads:'20KG', reps:100},
-            //     {title: 'PushUp',loads:'20KG', reps:100},
-            //     {title: 'PushUp',loads:'20KG', reps:100}, 
-            // ]   
+           
         }
     },
     
@@ -19,11 +14,13 @@
 </script>
 
 <template>
+
    <div class="home">
+        
         <div class="workouts">
             <workout-details ></workout-details>
         </div>
-    <workout-form></workout-form>
+        <workout-form></workout-form>
    </div>
 </template>
 

@@ -20,7 +20,8 @@
                 this.load = ''
                 this.reps = ''
                 this.$router.push('/')
-            }
+            },
+           
             
         }
     }

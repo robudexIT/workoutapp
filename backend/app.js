@@ -12,9 +12,10 @@ const tokenSecret = process.env.TOKEN_SECRET
 const PORT = process.env.PORT
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(setCustomHeaders)
 app.use(authRoutes)
 app.use(workoutRoutes)
-app.use(setCustomHeaders)
+
 const connectDB = async() => {
      try{
         await db.authenticate()

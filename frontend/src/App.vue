@@ -1,13 +1,20 @@
 <script >
    import NavBar from './components/NavBar.vue'
+   import SignupSigninSignout from './components/SignupSigninSignout.vue'
    export default {
-     components: { NavBar },
+     components: { NavBar, SignupSigninSignout },
 
+     methods: { 
+       
+     },
+     created(){
+     }
    }
 </script>
 
 <template>
    <div class="pages">
+      <signup-signin-signout></signup-signin-signout>
       <nav-bar></nav-bar>
       <div class="routeclass">
         <router-view></router-view>

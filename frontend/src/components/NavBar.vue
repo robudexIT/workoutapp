@@ -9,9 +9,10 @@
 </script>
 
 <template>
+     
      <header class="container">
-  
-        <h1><router-link :to="'/'">Workout Buddy</router-link></h1>
+       
+        <h1><router-link :to="'/'">Username Workout</router-link></h1>
      
      </header>
 </template>
@@ -32,4 +33,5 @@ header a {
   color: #333;
   text-decoration: none;
 }
+
 </style>
