@@ -1,21 +1,5 @@
 export default {
-    // async signUpUser(context, payload){
-    //     console.log(payload)
-    //     try {
-    //         const workout = await fetch('http://210.1.86.214:3000/signup', { 
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(payload)
-    //         })
-    //         if(workout.ok){
-    //             context.commit('mutatateUser')
-    //         }
-    //     }catch(error){
-    //         console.log(error)
-    //     }
-    // }, 
+   
    async signinAndsignupUser (context, payload){
         
         const apiAddr = context.rootGetters.getApiEndpoint

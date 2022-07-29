@@ -27,7 +27,7 @@ module.exports = async(req, res, next) =>{
         const username = verifyToken.username
         const newToken = jwt.sign({username:username},tokenSecret, {expiresIn:'300sec'})
         req.token = `${newToken} ${refreshToken}`
-        // req.username = username
+        req.username = username
         req.user = await User.findOne({where:{username:username}})
         req.refreshToken = refreshToken
         tokenList[refreshToken] = newToken
