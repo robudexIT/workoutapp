@@ -14,6 +14,7 @@
         },
         methods: {
             async getWorkouts(){
+                
                 await this.$store.dispatch('workout/getWorkouts',{token:this.token, currentUser:this.currentUser})
             },
             async deleteWorkout(e){
@@ -23,8 +24,9 @@
             }
         },
         created(){
-           this.getWorkouts()
-           console.log(this.workouts)
+            if(this.token){
+                this.getWorkouts()
+            }
         }
        
     }

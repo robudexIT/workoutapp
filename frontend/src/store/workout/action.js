@@ -1,6 +1,7 @@
 export default {
     async getWorkouts(context,payload){
         const apiAddr = context.rootGetters.getApiEndpoint
+        console.log(payload.token)
         try {
             const workouts = await fetch(`${apiAddr}/getworkouts`,{
                 method: 'GET',

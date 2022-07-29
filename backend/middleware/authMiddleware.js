@@ -7,7 +7,7 @@ module.exports = async(req, res, next) =>{
 
   
   const authHeader = req.headers['authorization']
- 
+  console.log(authHeader)
 
   //user signin for the first time
   if(!authHeader && req.path === '/signin'){
