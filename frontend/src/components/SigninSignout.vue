@@ -1,14 +1,15 @@
 
 <template>
     <div>
-        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">{{hasUser}}</button>
-
+        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" v-if="!currentUser && !token">Login</button>
+         <button style="width:auto;" v-if="currentUser && token" @click="signoutUser">Logout</button>
         <div id="id01" class="modal">
   
             <form class="modal-content animate"  method="post" @submit.prevent="signinUser">
                 <div class="imgcontainer">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <img src="img_avatar2.png" alt="Avatar" class="avatar">
+                <img src="" alt="Avatar" class="avatar">
+               
                 </div>
 
                 <div class="container">
@@ -22,10 +23,10 @@
               
                 </div>
 
-                <div class="container" style="background-color:#f1f1f1">
+                <!-- <div class="container" style="background-color:#f1f1f1">
                 <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
                 
-                </div>
+                </div>  -->
             </form>
         </div>
 
@@ -38,33 +39,41 @@ export default {
         return {
             username: '',
             password: '',
-            token: '',
-            currentUser: ''
+            
         }
     },
     methods: {
         async signinUser(){
             try {
-               await this.$store.dispatch('auth/signUpUser', {username:this.username, password:this.password,option:'signup'})
-                console.log(this.currentUser)
-                // this.$router.push('/')
+               await this.$store.dispatch('auth/signinAndsignupUser', {username:this.username, password:this.password,option:'signin'})
+                this.$router.go()
                 
             }catch(error){
                 console.log(error)
             }
             
+        },
+        async signoutUser(){
+          try{
+            await this.$store.dispatch('auth/signoutUser',{token: this.token})
+          }catch(error){
+            console.log(error)
+          }
         }
     },
     computed: {
-        getUsername(){
-            this.currentUser = this.$store.getters['auth/getUser'].username
+        currentUser(){
+            return this.$store.getters['auth/getUser'].username
         },
-        gettoken(){
-            this.token = this.$store.getters['auth/getUser'].token
+        token(){
+            return this.$store.getters['auth/getUser'].token
         },
         hasUser(){
             return this.currentUser && this.token ? 'Logout' : 'Login'
         }
+    },
+    created(){
+        this.$store.dispatch('auth/checkIfCurrentIsLogin')
     }
 }
 </script>

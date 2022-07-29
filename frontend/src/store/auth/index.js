@@ -7,7 +7,8 @@ export default {
     namespaced: true,
     state(){
         return { 
-           user: {}
+           user: {},
+           signupStatus: false
         }
     },
     getters,

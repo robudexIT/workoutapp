@@ -9,7 +9,20 @@
            
         }
     },
-    
+    computed: {
+        currentUser(){
+            return this.$store.getters['auth/getUser'].username
+        },
+        token(){
+            return this.$store.getters['auth/getUser'].token
+        },
+        hasUser(){
+            return this.currentUser && this.token ? 'Logout' : 'Login'
+        }
+    },
+    created(){
+        this.$store.dispatch('auth/checkIfCurrentIsLogin')
+    }
   }
 </script>
 
@@ -18,9 +31,9 @@
    <div class="home">
         
         <div class="workouts">
-            <workout-details ></workout-details>
+            <workout-details  v-if="currentUser && token"></workout-details>
         </div>
-        <workout-form></workout-form>
+        <workout-form v-if="currentUser && token"></workout-form>
    </div>
 </template>
 

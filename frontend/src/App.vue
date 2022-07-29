@@ -1,8 +1,9 @@
 <script >
    import NavBar from './components/NavBar.vue'
-   import SignupSigninSignout from './components/SignupSigninSignout.vue'
+   import SigninSignout from './components/SigninSignout.vue'
+   import TheSignup from './components/TheSignup.vue'
    export default {
-     components: { NavBar, SignupSigninSignout },
+     components: { NavBar, SigninSignout, TheSignup },
 
      methods: { 
        
@@ -14,7 +15,14 @@
 
 <template>
    <div class="pages">
-      <signup-signin-signout></signup-signin-signout>
+      <div class='login_container'>
+        <div>
+             <signin-signout> </signin-signout>
+        </div>
+         <div>
+            <the-signup></the-signup>
+         </div>
+      </div>
       <nav-bar></nav-bar>
       <div class="routeclass">
         <router-view></router-view>
@@ -30,5 +38,14 @@
   max-width: 1400px;
   padding: 20px;
   margin: 0 auto;
+}
+.login_container {
+   display: flex;
+
+}
+.login_container  > div {
+  margin: 2px;
+  padding: 2px;
+  font-size: 30px;
 }
 </style>

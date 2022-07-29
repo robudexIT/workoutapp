@@ -1,21 +1,21 @@
 export default {
-    async signUpUser(context, payload){
-        console.log(payload)
-        try {
-            const workout = await fetch('http://210.1.86.214:3000/signup', { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            if(workout.ok){
-                context.commit('mutatateUser')
-            }
-        }catch(error){
-            console.log(error)
-        }
-    }, 
+    // async signUpUser(context, payload){
+    //     console.log(payload)
+    //     try {
+    //         const workout = await fetch('http://210.1.86.214:3000/signup', { 
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(payload)
+    //         })
+    //         if(workout.ok){
+    //             context.commit('mutatateUser')
+    //         }
+    //     }catch(error){
+    //         console.log(error)
+    //     }
+    // }, 
    async signinAndsignupUser (context, payload){
         
         const apiAddr = context.rootGetters.getApiEndpoint
@@ -31,7 +31,7 @@ export default {
             },
             body: JSON.stringify(payload)
         })
-        console.log(data)
+       
         if(!data.ok){
             const error = new Error('Error in access this endpoint')
             throw error
@@ -43,10 +43,17 @@ export default {
         if(option === 'signin'){
             //save to localstorage and commit
            context.dispatch('updateUserState', user)
-        } 
+        }else {
+          //dispatch signup success status
+          
+          context.dispatch('signupSucess', true)
+        }
        
    } ,
-
+   signupSucess(context, payload){
+    
+    context.commit('mutateSignupStatus', payload) //payload is true or false
+   },
    checkIfCurrentIsLogin(context){
     const data = {}
     data.token = localStorage.getItem('token')
@@ -60,10 +67,13 @@ export default {
      context.commit('mutatateUser', payload)
    },
    async signoutUser(context, payload){
+      const apiAddr = context.rootGetters.getApiEndpoint
       const data = await fetch(`${apiAddr}/signout`, {
         method:'DELETE',
         headers: {
-            'Authorization': payload.token
+            'Authorization': `Bearer ${payload.token}`,
+            'Access-Control-Allow-Headers': '*',
+            'Content-Type': 'application/json',
         }
       })
       if(!data.ok){

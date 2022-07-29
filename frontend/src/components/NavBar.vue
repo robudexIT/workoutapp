@@ -4,7 +4,19 @@
             return {
                 var: ''
             }
-        }
+        },
+        computed: {
+            currentUser(){
+             return this.$store.getters['auth/getUser'].username
+             },
+            token(){
+                return this.$store.getters['auth/getUser'].token
+            },
+           
+        },
+       create(){
+            this.$store.dispatch('auth/checkIfCurrentIsLogin')
+       }
     }
 </script>
 
@@ -12,7 +24,7 @@
      
      <header class="container">
        
-        <h1><router-link :to="'/'">Username Workout</router-link></h1>
+        <h1><router-link :to="'/'">{{currentUser}} Workout</router-link></h1>
      
      </header>
 </template>
