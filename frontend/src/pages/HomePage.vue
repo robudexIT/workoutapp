@@ -31,9 +31,9 @@
    <div class="home">
         
         <div class="workouts">
-            <workout-details  v-if="currentUser && token"></workout-details>
+            <workout-details  v-if="currentUser && token" :currentUser="currentUser" :token="token"></workout-details>
         </div>
-        <workout-form v-if="currentUser && token"></workout-form>
+        <workout-form v-if="currentUser && token" :currentUser="currentUser" :token="token"></workout-form>
    </div>
 </template>
 

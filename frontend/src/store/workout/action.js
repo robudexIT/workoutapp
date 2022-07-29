@@ -1,7 +1,17 @@
 export default {
-    async getWorkouts(context){
+    async getWorkouts(context,payload){
+        const apiAddr = context.rootGetters.getApiEndpoint
         try {
-            const workouts = await fetch('http://localhost:3000/getworkouts')
+            const workouts = await fetch(`${apiAddr}/getworkouts`,{
+                method: 'GET',
+                headers: {
+                    headers: {
+                        'Authorization': `Bearer ${payload.token}`,
+                        'Access-Control-Allow-Headers': '*',
+                        'Content-Type': 'application/json',
+                    }
+                }
+            })
             if(workouts.ok){
                 const data = await workouts.json()
                 context.commit('getWorkouts', data)
@@ -11,17 +21,21 @@ export default {
         }
     },
     async addWorkout(context, payload){
+        const apiAddr = context.rootGetters.getApiEndpoint
         console.log(payload)
         try {
-            const workout = await fetch('http://localhost:3000/workout', { 
+            const data = await fetch(`${apiAddr}/workout`, { 
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${payload.token}`,
+                    'Access-Control-Allow-Headers': '*',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload)
             })
-            if(workout.ok){
-                context.dispatch('getWorkouts')
+            if(data.ok){
+                const workout = await data.json()
+                context.dispatch('getWorkouts',workout)
             }
         }catch(error){
             console.log(error)
@@ -29,9 +43,15 @@ export default {
     },
     async deleteWorkout(context,payload){
         const workoutId = payload.workoutId
+        const apiAddr = context.rootGetters.getApiEndpoint
         try {
-            const deleteResponse = await fetch(`http://localhost:3000/workout/${workoutId}`,{
-                method: 'DELETE'
+            const deleteResponse = await fetch(`${apiAddr}/${workoutId}`,{
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${payload.token}`,
+                    'Access-Control-Allow-Headers': '*',
+                    'Content-Type': 'application/json',
+                },
             })
            if(deleteResponse.ok){
              context.dispatch('getWorkouts')

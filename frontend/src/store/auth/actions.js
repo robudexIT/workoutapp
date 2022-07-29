@@ -69,7 +69,7 @@ export default {
    async signoutUser(context, payload){
       const apiAddr = context.rootGetters.getApiEndpoint
       const data = await fetch(`${apiAddr}/signout`, {
-        method:'DELETE',
+        method:'GET',
         headers: {
             'Authorization': `Bearer ${payload.token}`,
             'Access-Control-Allow-Headers': '*',
@@ -80,11 +80,9 @@ export default {
         const error = new Error('Error in accessing this endpoint')
         throw error
       }
-      const logoutUser = data.json()
-      if(logoutUser.token === ''){
-        localStorage.removeItem('token')
-        localStorage.removeItem('currentUser')
-      }
+      localStorage.removeItem('token')
+      localStorage.removeItem('currentUser')
+     
       
    }
 

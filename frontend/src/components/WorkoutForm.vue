@@ -8,12 +8,15 @@
             }
 
         },
+        props: ['token', 'currentUser'],
         methods: { 
             addWorkout(){
                 const data = {
                     title: this.title,
                     load: this.load,
-                    reps: this.reps
+                    reps: this.reps,
+                    token: this.token,
+                    currentUser:this.currentUser
                 }
                 this.$store.dispatch('workout/addWorkout', data)
                 this.title = ''

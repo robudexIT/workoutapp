@@ -56,6 +56,7 @@ export default {
         async signoutUser(){
           try{
             await this.$store.dispatch('auth/signoutUser',{token: this.token})
+            this.$router.go()
           }catch(error){
             console.log(error)
           }

@@ -6,6 +6,7 @@
 
            }
         },
+        props: ['token', 'currentUser'],
         computed: {
             workouts(){
                return this.$store.getters['workout/getWorkouts']
@@ -13,16 +14,17 @@
         },
         methods: {
             async getWorkouts(){
-                await this.$store.dispatch('workout/getWorkouts')
+                await this.$store.dispatch('workout/getWorkouts',{token:this.token, currentUser:this.currentUser})
             },
             async deleteWorkout(e){
                 const workoutId = e.target.id
-                await this.$store.dispatch('workout/deleteWorkout',{workoutId: workoutId})
+                await this.$store.dispatch('workout/deleteWorkout',{workoutId: workoutId,token: this.token, currentUser:this.currentUser})
                 // this.$router.push('/')
             }
         },
         created(){
            this.getWorkouts()
+           console.log(this.workouts)
         }
        
     }
@@ -36,7 +38,7 @@
       <p><strong>Load (kg): </strong>{{workout.load}}</p>
       <p><strong>Number of reps: </strong>{{workout.reps}}</p>
       <p>{{workout.createdAt}}</p>
-      <span :id="workout.workoutId" @click="deleteWorkout">delete</span>
+      <span :id="workout.id" @click="deleteWorkout">delete</span>
     </li>
     </ul>
  
