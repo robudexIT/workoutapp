@@ -6,8 +6,7 @@ const workoutRoutes = require('./routes/workoutroutes')
 const authRoutes = require('./routes/authRoutes')
 const jwt = require('jsonwebtoken')
 const tokenSecret = process.env.TOKEN_SECRET
-// const User =  require('./models/User')
-// const Workout = require('./models/Workout')
+const cookieParser = require('cookie-parser')
 
 const PORT = process.env.PORT
 app.use(express.json())

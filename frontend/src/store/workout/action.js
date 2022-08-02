@@ -12,10 +12,10 @@ export default {
                     }
                 
             })
-            if(workouts.ok){
+            if(data.ok){
                 const workouts = await data.json()
-                context.commit('getWorkouts', data)
-                context.dispatch('auth/updateUserState',{username:workouts.username, token:workouts.token})
+                context.commit('getWorkouts', workouts)
+                context.dispatch('auth/updateUserState',{username:workouts.username, token:workouts.token},{root:true})
             }
         }catch(error){
             console.log(error)
@@ -37,7 +37,7 @@ export default {
             if(data.ok){
                 const workout = await data.json()
                 context.dispatch('getWorkouts',workout)
-                context.dispatch('auth/updateUserState',{username:workout.username, token:workout.token})
+               
             }
         }catch(error){
             console.log(error)
@@ -47,7 +47,7 @@ export default {
         const workoutId = payload.workoutId
         const apiAddr = context.rootGetters.getApiEndpoint
         try {
-            const data = await fetch(`${apiAddr}/${workoutId}`,{
+            const data = await fetch(`${apiAddr}/workout/${workoutId}`,{
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${payload.token}`,
@@ -55,10 +55,12 @@ export default {
                     'Content-Type': 'application/json',
                 },
             })
+            console.log(data)
            if(data.ok){
-            const deleteWorkout = data.json()
-            context.dispatch('auth/updateUserState',{username:deleteWorkout.username, token:deleteWorkout.token})
-             context.dispatch('getWorkouts')
+            const deleteWorkout = await data.json()
+            console.log(deleteWorkout)
+            context.dispatch('getWorkouts',{username:deleteWorkout.username, token: deleteWorkout.token})
+           
             
            }
 

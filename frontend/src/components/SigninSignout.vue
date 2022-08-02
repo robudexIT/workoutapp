@@ -8,7 +8,7 @@
             <form class="modal-content animate"  method="post" @submit.prevent="signinUser">
                 <div class="imgcontainer">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <img src="" alt="Avatar" class="avatar">
+                <img src="@/assets/avatar.png" alt="Avatar" class="avatar"  >
                
                 </div>
 
@@ -80,6 +80,7 @@ export default {
 </script>
 
 <style>
+
 /* Full-width input fields */
 input[type=text], input[type=password] {
   width: 100%;
@@ -120,7 +121,7 @@ button:hover {
 }
 
 img.avatar {
-  width: 40%;
+  width: 20%;
   border-radius: 50%;
 }
 
@@ -161,7 +162,7 @@ span.psw {
   position: absolute;
   right: 25px;
   top: 0;
-  color: #000;
+  color: black;
   font-size: 35px;
   font-weight: bold;
 }

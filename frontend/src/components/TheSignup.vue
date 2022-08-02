@@ -10,7 +10,7 @@
             <p>Please fill in this form to create an account.</p>
             <hr>
             <label for="email"><b>Username</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required v-model="username">
+            <input type="text" placeholder="Enter Username" name="email" required v-model="username">
 
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" required v-model="password">
