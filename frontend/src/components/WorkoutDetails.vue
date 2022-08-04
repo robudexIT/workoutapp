@@ -6,25 +6,39 @@
 
            }
         },
-        props: ['token', 'currentUser'],
+        props: ['currentUser'],
         computed: {
             workouts(){
-               return this.$store.getters['workout/getWorkouts']
+               try{
+                    return this.$store.getters['workout/getWorkouts']
+               } 
+               catch(error){
+                console.log(error)
+               }
             }
         },
         methods: {
             async getWorkouts(){
-                
-                await this.$store.dispatch('workout/getWorkouts',{token:this.token, currentUser:this.currentUser})
-            },
+                try{
+                    await this.$store.dispatch('workout/getWorkouts',{currentUser:this.currentUser})
+            
+                }catch(error){
+                    console.log(error)
+                }
+            },  
             async deleteWorkout(e){
-                const workoutId = e.target.id
-                await this.$store.dispatch('workout/deleteWorkout',{workoutId: workoutId,token: this.token, currentUser:this.currentUser})
-                // this.$router.push('/')
+                try{
+                    const workoutId = e.target.id
+                    await this.$store.dispatch('workout/deleteWorkout',{workoutId: workoutId, currentUser:this.currentUser})
+                    // this.$router.push('/')
+                }catch(error){
+                    console.log(error)
+                }
+               
             }
         },
         created(){
-            if(this.token){
+            if(this.currentUser){
                 this.getWorkouts()
             }
         }

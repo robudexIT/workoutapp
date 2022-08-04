@@ -26,7 +26,8 @@ export default {
         }
         if(option === 'signin'){
             //save to localstorage and commit
-           context.dispatch('updateUserState', user)
+          context.dispatch('updateUserState', user)
+          console.log('Signin access')
         }else {
           //dispatch signup success status
           
@@ -38,24 +39,44 @@ export default {
     
     context.commit('mutateSignupStatus', payload) //payload is true or false
    },
-   checkIfCurrentIsLogin(context){
-    const data = {}
-    data.token = localStorage.getItem('token')
-    data.username = localStorage.getItem('currentUser')
-    context.commit('mutatateUser', data)
+  async checkIfCurrentIsLogin(context){
+    const user = context.state.user
+    if(user.expires > Date.now()){
+      context.commit('mutatateUser', data)
+      return
+    }
+    const apiAddr = context.rootGetters.getApiEndpoint
+    const token = await fetch(`${apiAddr}/token`,{method: 'GET'})
+    if(!token.ok){
+      console.log('Cannot get tokens')
+      context.commit('mutatateUser',{})
+      return
+    }
+    const newUserState = await token.json()
+    context.commit('mutatateUser', newUserState)
    },
 
    updateUserState(context,payload){
-     localStorage.setItem('token', payload.token)
-     localStorage.setItem('currentUser', payload.username)
+    //  localStorage.setItem('token', payload.token)
+    //  localStorage.setItem('currentUser', payload.username)
      context.commit('mutatateUser', payload)
    },
    async signoutUser(context, payload){
       const apiAddr = context.rootGetters.getApiEndpoint
+      const token = await fetch(`{apiAddr}/tokens`, {
+                      method: 'GET'
+                    })
+      if(!token.ok){
+        const error = new Error('Cannot provide access token')
+        throw error
+      }
+       const accessToken = await token.json()
+
+      
       const data = await fetch(`${apiAddr}/signout`, {
         method:'GET',
         headers: {
-            'Authorization': `Bearer ${payload.token}`,
+            'Authorization': `Bearer ${accessToken.token}`,
             'Access-Control-Allow-Headers': '*',
             'Content-Type': 'application/json',
         }
@@ -64,9 +85,10 @@ export default {
         const error = new Error('Error in accessing this endpoint')
         throw error
       }
-      localStorage.removeItem('token')
-      localStorage.removeItem('currentUser')
-     
+
+      // localStorage.removeItem('token')
+      // localStorage.removeItem('currentUser')
+      context.commit('mutatateUser', {})
       
    }
 

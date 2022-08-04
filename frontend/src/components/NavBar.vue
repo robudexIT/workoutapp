@@ -14,7 +14,7 @@
             },
            
         },
-       create(){
+       created(){
             this.$store.dispatch('auth/checkIfCurrentIsLogin')
        }
     }

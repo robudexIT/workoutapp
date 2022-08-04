@@ -42,7 +42,7 @@ module.exports = async(req, res, next) =>{
           userAccessTokenList[username] = token
 
           res.cookie('refreshToken', newRefreshToken, {httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-          res.status(200).json({message:'Recieve new access token', token:token,rcvToken:true})
+          res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
           return
          
        }else{
