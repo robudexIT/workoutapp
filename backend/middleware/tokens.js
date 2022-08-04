@@ -41,7 +41,7 @@ module.exports = async(req, res, next) =>{
           // to make sure accessToken will be use once
           userAccessTokenList[username] = token
 
-          res.cookie('refreshToken', newRefreshToken, {sameSite: 'None',secure:false,httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+          res.cookie('refreshToken', newRefreshToken, {sameSite: 'Lax',secure:false,httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
           res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
           return
          
