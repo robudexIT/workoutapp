@@ -11,9 +11,12 @@ const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
 app.use(setCustomHeaders)
+app.use('/tokens', require('./middleware/tokens'))
 app.use(authRoutes)
 app.use(workoutRoutes)
+app.use(errorHandler)
 
 const connectDB = async() => {
      try{
@@ -24,6 +27,9 @@ const connectDB = async() => {
         })
      }catch(error){
         console.log(error)
+        const err = new Error('Error in Connecting on database')
+        err.statusCode = 500
+        next(err)
      }
     
 }
@@ -46,5 +52,8 @@ function setCustomHeaders(req, res, next) {
  
      // Pass to next layer of middleware
      next();
+}
+function errorHandler(error,req, res, next){
+   res.json({message: err.message, statusCode: err.statusCode})
 }
 connectDB()

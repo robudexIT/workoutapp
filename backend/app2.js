@@ -1,88 +1,62 @@
 const express = require('express')
-const app = express()
-const sequelize = require('sequelize')
 require('dotenv').config()
-const { DataTypes } = require('sequelize')
+const app = express()
+const db = require('./config/database')
+// const workoutRoutes = require('./routes/workoutroutes')
+// const authRoutes = require('./routes/authRoutes')
+const jwt = require('jsonwebtoken')
+const tokenSecret = process.env.TOKEN_SECRET
+const cookieParser = require('cookie-parser')
 
-const dbHost = process.env.DB_HOST
-const dbName = process.env.DB_NAME 
-const dbUser = process.env.DB_USER 
-const dbPwd = process.env.DB_PWD
-
-
-const db = new sequelize(dbName,dbUser,dbPwd, {
-    host: dbHost,
-    dialect: 'mysql'
-})
-
-
-const User = db.define('User', {
-    userId: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
-    },
-    username: {
-        type:DataTypes.STRING
-    },
-    hashpassword: {
-        type:DataTypes.STRING
-    },
-    salt: {
-        type:DataTypes.STRING
-    }
-})
-
-
-const Workout = db.define('Workout', {
-    workoutId: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        
-    },
-    title: {
-        type:DataTypes.STRING
-
-    },
-    load: {
-        type:DataTypes.STRING
-    },
-    reps: {
-        type:DataTypes.INTEGER
-    }
-})
-
-
-User.hasMany(Workout)
-User.sync()
-Workout.belongsTo(User)
-Workout.sync()
-
+const PORT = process.env.PORT
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+ app.use(cookieParser())
+app.use(setCustomHeaders)
+// app.use(authRoutes)
+// app.use(workoutRoutes)
 
-const userId = '6f5bd0fb-1c99-4f9e-a6f2-7b09bd0d710c'
-const username = 'rogmer'
+app.get('/', (req, res) => {
+    console.log('it came here')
+    res.cookie('name', 'geeksforgeeks')
+    res.json({message:'Cookie is set'})
 
-app.post('/workout', async (req, res, next) => {
-    console.log(req.body)
-    const title = req.body.title 
-    const load = req.body.load 
-    const reps = req.body.reps
-    const user = await User.findOne({where: {username: username}})
-     const workout = await user.createWorkout({title,load,reps})
-    const getWorks = await user.getWorkouts()
-    console.log(getWorks)
+})
+app.get('/token', (req,res, next) => {
+    const cookie = req.cookies.name
+    console.log(cookie)
+    res.send(cookie)
 })
 const connectDB = async() => {
-    try{
-       await db.authenticate()
-       console.log('Successfully Connect to db')
-       app.listen(3001, () => {
-        console.log('Working')
-       })
-    }catch(error){
-       console.log(error)
-    }
-   
+     try{
+        await db.authenticate()
+        console.log('Successfully Connect to db')
+        app.listen(PORT, () => {
+            console.log('App is running on port ', PORT)
+        })
+     }catch(error){
+        console.log(error)
+     }
+    
 }
 
+
+function setCustomHeaders(req, res, next) {
+     // Website you wish to allow to connect
+     res.setHeader('Access-Control-Allow-Origin', '*');
+
+     // Request methods you wish to allow
+     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+ 
+     // Request headers you wish to allow
+   //   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+     res.setHeader('Access-Control-Allow-Headers', '*');
+ 
+     // Set to true if you need the website to include cookies in the requests sent
+     // to the API (e.g. in case you use sessions)
+     res.setHeader('Access-Control-Allow-Credentials', true);
+ 
+     // Pass to next layer of middleware
+     next();
+}
 connectDB()

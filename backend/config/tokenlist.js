@@ -1,1 +1,6 @@
-module.exports = {}
+module.exports.refreshToken = {}
+
+module.exports.accessToken  = {}
+
+
+
