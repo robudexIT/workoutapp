@@ -99,7 +99,7 @@ module.exports.signinUser = async(req, res, next) => {
            
             
       
-            res.cookie('refreshToken', refreshToken, {sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+            res.cookie('refreshToken', refreshToken, {sameSite:'None',secure:true,httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
             const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
             
             console.log(userRefreshTokenList.length)
