@@ -37,6 +37,7 @@ const connectDB = async() => {
 
 function setCustomHeaders(req, res, next) {
      // Website you wish to allow to connect
+     console.log(req.headers)
      const allowedOrigins = ['http://localhost:3000','http://localhost:5173']
      const origin = req.headers.origin
      if(allowedOrigins.indexOf(origin) !== 1){
@@ -60,6 +61,6 @@ function setCustomHeaders(req, res, next) {
      next();
 }
 function errorHandler(error,req, res, next){
-   res.json({message: err.message, statusCode: err.statusCode})
+   res.json({message: error.message, statusCode: error.statusCode})
 }
 connectDB()
