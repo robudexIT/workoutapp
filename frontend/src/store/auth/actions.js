@@ -9,7 +9,7 @@ export default {
 
         const data = await fetch(`${apiAddr}/${option}`,{
             method: 'POST',
-            // mode: 'no-cors',
+             mode: 'no-cors',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'

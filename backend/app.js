@@ -43,6 +43,8 @@ function setCustomHeaders(req, res, next) {
      if(allowedOrigins.indexOf(origin) !== 1){
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Vary', 'Origin')
+     }else{
+      res.setHeader('Access-Control-Allow-Origin', '*');
      }
      
 
