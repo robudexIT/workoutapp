@@ -2,7 +2,7 @@ export default {
     async getWorkouts(context,payload){
         const apiAddr = context.rootGetters.getApiEndpoint
         console.log(context) 
-            const token  = await fetch(`${apiAddr}/tokens`,{method:'GET'})
+            const token  = await fetch(`${apiAddr}/tokens`,{method:'GET',credentials: 'include',})
             if(!token.ok){
                const error = new Error('Cannot get accessToken')
                throw error 
@@ -30,7 +30,7 @@ export default {
     },
     async addWorkout(context, payload){
         const apiAddr = context.rootGetters.getApiEndpoint
-        const token  = await fetch(`${apiAddr}/tokens`,{method:'GET'})
+        const token  = await fetch(`${apiAddr}/tokens`,{method:'GET',credentials: 'include',})
         if(!token.ok){
            const error = new Error('Cannot get accessToken')
            throw error 

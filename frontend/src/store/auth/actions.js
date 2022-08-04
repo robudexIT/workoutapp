@@ -16,7 +16,10 @@ export default {
             },
             body: JSON.stringify(payload)
         })
-       
+        data.headers.forEach((key ,val) =>{
+          console.log(key, val)
+        })
+        console.log(data.headers)
         if(!data.ok){
             const error = new Error('Error in access this endpoint')
             throw error

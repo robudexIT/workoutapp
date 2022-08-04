@@ -104,6 +104,7 @@ module.exports.signinUser = async(req, res, next) => {
             
             console.log(userRefreshTokenList.length)
             console.log(userRefreshTokenList)
+            console.log(res.headers)
             res.status(200).json(response)
             
         }catch(error){

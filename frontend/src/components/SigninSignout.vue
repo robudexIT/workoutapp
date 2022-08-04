@@ -46,7 +46,7 @@ export default {
         async signinUser(){
             try {
                await this.$store.dispatch('auth/signinAndsignupUser', {username:this.username, password:this.password,option:'signin'})
-                this.$router.go()
+                // this.$router.go()
                 
             }catch(error){
                 console.log(error)
@@ -56,7 +56,7 @@ export default {
         async signoutUser(){
           try{
             await this.$store.dispatch('auth/signoutUser')
-            this.$router.go()
+            // this.$router.go()
           }catch(error){
             console.log(error)
           }
