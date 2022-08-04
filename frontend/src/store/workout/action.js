@@ -11,6 +11,7 @@ export default {
 
             const data = await fetch(`${apiAddr}/getworkouts`,{
                 method: 'GET',
+                credentials: 'include',
                     headers: {
                         'Authorization': `Bearer ${accessToken.token}`,
                         'Access-Control-Allow-Headers': '*',
@@ -37,6 +38,7 @@ export default {
         const accessToken = await token.json()
             const data = await fetch(`${apiAddr}/workout`, { 
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${accessToken.token}`,
                     'Access-Control-Allow-Headers': '*',
@@ -61,6 +63,7 @@ export default {
          const accessToken = await token.json()
          const data = await fetch(`${apiAddr}/workout/${workoutId}`,{
                 method: 'DELETE',
+                credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${accessToken.token}`,
                     'Access-Control-Allow-Headers': '*',

@@ -10,6 +10,7 @@ export default {
         const data = await fetch(`${apiAddr}/${option}`,{
             method: 'POST',
             // mode: 'no-cors',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -21,6 +22,7 @@ export default {
             throw error
         }
         const user = await data.json()
+        
         if(!user[option]){
             throw user.message
         }
@@ -39,22 +41,15 @@ export default {
     
     context.commit('mutateSignupStatus', payload) //payload is true or false
    },
-  async checkIfCurrentIsLogin(context){
+   checkIfCurrentIsLogin(context){
     const user = context.state.user
     if(user.expires > Date.now()){
       context.commit('mutatateUser', data)
       return
     }
-    const apiAddr = context.rootGetters.getApiEndpoint
-    const token = await fetch(`${apiAddr}/token`,{method: 'GET'})
-    if(!token.ok){
-      console.log('Cannot get tokens')
-      context.commit('mutatateUser',{})
-      return
-    }
-    const newUserState = await token.json()
-    context.commit('mutatateUser', newUserState)
-   },
+    context.commit('mutatateUser',{})
+
+  },
 
    updateUserState(context,payload){
     //  localStorage.setItem('token', payload.token)
@@ -64,7 +59,8 @@ export default {
    async signoutUser(context, payload){
       const apiAddr = context.rootGetters.getApiEndpoint
       const token = await fetch(`{apiAddr}/tokens`, {
-                      method: 'GET'
+                      method: 'GET',
+                      credentials: 'include',
                     })
       if(!token.ok){
         const error = new Error('Cannot provide access token')
@@ -75,6 +71,7 @@ export default {
       
       const data = await fetch(`${apiAddr}/signout`, {
         method:'GET',
+        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${accessToken.token}`,
             'Access-Control-Allow-Headers': '*',
