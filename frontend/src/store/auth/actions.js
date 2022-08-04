@@ -6,10 +6,10 @@ export default {
         const username = payload.username
         const password = payload.password
         const option = payload.option // signin or signup
-
+        console.log(payload)
         const data = await fetch(`${apiAddr}/${option}`,{
             method: 'POST',
-             mode: 'no-cors',
+            //  mode: 'cors',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
