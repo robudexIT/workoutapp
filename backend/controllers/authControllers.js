@@ -99,7 +99,7 @@ module.exports.signinUser = async(req, res, next) => {
            
             
       
-            res.cookie('refreshToken', refreshToken, {sameSite:false,secure:false,httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+            res.cookie('refreshToken', refreshToken, {sameSite:true,secure:true,httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
             const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
             
             console.log(userRefreshTokenList.length)
@@ -117,6 +117,7 @@ module.exports.signoutUser = (req, res, next) => {
     if(req.isAuthenticated){
         userRefreshTokenList[req.username] = userRefreshTokenList[req.username].filter(rf => rf != req.refreshToken) 
         req.clearCookie(req.refreshToken)
+        res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
         res.json({message:'User Loggedout', token:'' })
     }
     

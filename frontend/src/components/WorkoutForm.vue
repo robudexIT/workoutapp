@@ -50,7 +50,7 @@
 </template>
 
 
-<style>
+<style scoped>
         /* layout */
     :root {
     --primary: #1aac83;
@@ -68,6 +68,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: white;
     }
     form button {
     background: var(--primary);

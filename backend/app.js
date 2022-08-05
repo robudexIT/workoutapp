@@ -1,4 +1,7 @@
 const express = require('express')
+const http = require('http')
+const https = require('https')
+const fs = require('fs')
 require('dotenv').config()
 const app = express()
 const db = require('./config/database')
@@ -9,6 +12,7 @@ const tokenSecret = process.env.TOKEN_SECRET
 const cookieParser = require('cookie-parser')
 
 const PORT = process.env.PORT
+const PORT_SECURE = process.env.PORT_SECURE
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
@@ -22,9 +26,21 @@ const connectDB = async() => {
      try{
         await db.authenticate()
         console.log('Successfully Connect to db')
-        app.listen(PORT, () => {
-            console.log('App is running on port ', PORT)
-        })
+      //   app.listen(PORT, () => {
+      //       console.log('App is running on port ', PORT)
+      //   })
+      https.createServer(
+         {
+            key: fs.readFileSync("key.pem"),
+            cert: fs.readFileSync("cert.pem")
+         },
+         app
+      ).listen(PORT_SECURE, () =>{
+         console.log('App is running on  secure port', PORT_SECURE)
+      })
+      http.createServer(app).listen(PORT, () => {
+         console.log('App is running on', PORT)
+      })
      }catch(error){
         console.log(error)
         const err = new Error('Error in Connecting on database')

@@ -1,7 +1,6 @@
 export default {
    
-   async signinAndsignupUser (context, payload){
-        
+   async signinAndsignupUser (context, payload){   
         const apiAddr = context.rootGetters.getApiEndpoint
         const username = payload.username
         const password = payload.password
@@ -16,10 +15,7 @@ export default {
             },
             body: JSON.stringify(payload)
         })
-        data.headers.forEach((key ,val) =>{
-          console.log(key, val)
-        })
-        console.log(data.headers)
+       
         if(!data.ok){
             const error = new Error('Error in access this endpoint')
             throw error
@@ -44,24 +40,43 @@ export default {
     
     context.commit('mutateSignupStatus', payload) //payload is true or false
    },
-   checkIfCurrentIsLogin(context){
-    const user = context.state.user
-    if(user.expires > Date.now()){
-      context.commit('mutatateUser', data)
+   async checkIfCurrentIsLogin(context){
+    
+    const userState = {}
+    userState.username = localStorage.getItem('currentUser')
+    userState.token = localStorage.getItem('token')
+    userState.expires = localStorage.getItem('expires')
+    if(!userState.username || !userState.token || !userState.expires){
       return
     }
-    context.commit('mutatateUser',{})
-
+    if(userState.expires < new Date(Date.now)){
+      const apiAddr = context.rootGetters.getApiEndpoint
+      const token =  await context.dispatch('fetchUserToken', apiAddr)
+       
+      const user = await token.json()
+      context.dispatch('updateUserState', user)
+      return
+     }
+     context.dispatch('updateUserState', userState) 
+    
   },
-
    updateUserState(context,payload){
-    //  localStorage.setItem('token', payload.token)
-    //  localStorage.setItem('currentUser', payload.username)
-     context.commit('mutatateUser', payload)
+        localStorage.setItem('token', payload.token)
+        localStorage.setItem('currentUser', payload.username)
+        localStorage.setItem('expires', payload.expires)
+        context.commit('mutatateUser', payload)
    },
+   async fetchUserToken(context, apiAddr){
+    const token =  await fetch(`${apiAddr}/tokens`,{method:'GET', credentials: 'include'})
+    if(!token.ok){
+        const error = new Error('Cannot get accessToken')
+        throw error 
+     }
+     return token
+  },
    async signoutUser(context, payload){
       const apiAddr = context.rootGetters.getApiEndpoint
-      const token = await fetch(`{apiAddr}/tokens`, {
+      const token = await fetch(`${apiAddr}/tokens`, {
                       method: 'GET',
                       credentials: 'include',
                     })
@@ -69,14 +84,14 @@ export default {
         const error = new Error('Cannot provide access token')
         throw error
       }
-       const accessToken = await token.json()
+       const user = await token.json()
 
       
       const data = await fetch(`${apiAddr}/signout`, {
         method:'GET',
         credentials: 'include',
         headers: {
-            'Authorization': `Bearer ${accessToken.token}`,
+            'Authorization': `Bearer ${user.token}`,
             'Access-Control-Allow-Headers': '*',
             'Content-Type': 'application/json',
         }
@@ -85,9 +100,12 @@ export default {
         const error = new Error('Error in accessing this endpoint')
         throw error
       }
+       
+     
+       localStorage.removeItem('token')
+       localStorage.removeItem('currentUser')
+       localStorage.removeItem('expires')
 
-      // localStorage.removeItem('token')
-      // localStorage.removeItem('currentUser')
       context.commit('mutatateUser', {})
       
    }

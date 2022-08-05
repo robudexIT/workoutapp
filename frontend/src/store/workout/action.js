@@ -1,19 +1,14 @@
 export default {
     async getWorkouts(context,payload){
-        const apiAddr = context.rootGetters.getApiEndpoint
-        console.log(context) 
-            const token  = await fetch(`${apiAddr}/tokens`,{method:'GET',credentials: 'include',})
-            if(!token.ok){
-               const error = new Error('Cannot get accessToken')
-               throw error 
-            }
-            const accessToken = await token.json()
+            const apiAddr = context.rootGetters.getApiEndpoint
+            const token  = await context.dispatch('auth/fetchUserToken',apiAddr,{root:true})
+            const user = await token.json()
 
             const data = await fetch(`${apiAddr}/getworkouts`,{
                 method: 'GET',
                 credentials: 'include',
                     headers: {
-                        'Authorization': `Bearer ${accessToken.token}`,
+                        'Authorization': `Bearer ${user.token}`,
                         'Access-Control-Allow-Headers': '*',
                         'Content-Type': 'application/json',
                     }
@@ -26,21 +21,18 @@ export default {
             }
             const workouts = await data.json()
             context.commit('getWorkouts', workouts)
-            // context.dispatch('auth/updateUserState',{username:workouts.username, token:workouts.token},{root:true})
+            context.dispatch('auth/updateUserState',user,{root:true})
     },
+    
     async addWorkout(context, payload){
         const apiAddr = context.rootGetters.getApiEndpoint
-        const token  = await fetch(`${apiAddr}/tokens`,{method:'GET',credentials: 'include',})
-        if(!token.ok){
-           const error = new Error('Cannot get accessToken')
-           throw error 
-        }
-        const accessToken = await token.json()
+        const token  = await context.dispatch('auth/fetchUserToken',apiAddr,{root:true})
+        const user = await token.json()
             const data = await fetch(`${apiAddr}/workout`, { 
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Authorization': `Bearer ${accessToken.token}`,
+                    'Authorization': `Bearer ${user.token}`,
                     'Access-Control-Allow-Headers': '*',
                     'Content-Type': 'application/json',
                 },
@@ -56,28 +48,24 @@ export default {
     async deleteWorkout(context,payload){
         const workoutId = payload.workoutId
         const apiAddr = context.rootGetters.getApiEndpoint
-        if(!token.ok){
-            const error = new Error('Cannot get accessToken')
-            throw error 
-         }
-         const accessToken = await token.json()
-         const data = await fetch(`${apiAddr}/workout/${workoutId}`,{
+        const token  = await context.dispatch('auth/fetchUserToken',apiAddr,{root:true})
+        const user = await token.json()
+        const data = await fetch(`${apiAddr}/workout/${workoutId}`,{
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
-                    'Authorization': `Bearer ${accessToken.token}`,
+                    'Authorization': `Bearer ${user.token}`,
                     'Access-Control-Allow-Headers': '*',
                     'Content-Type': 'application/json',
                 },
             })
-            console.log(data)
-           if(!data.ok){
+            // console.log(data)
+        if(!data.ok){
               const error = new Error('Cannot Delete workout')
               throw error
-           }
-           const deleteWorkout = await data.json()
-           console.log(deleteWorkout)
-           context.dispatch('getWorkouts',{username:deleteWorkout.username})
+        }
+        const deleteWorkout = await data.json()
+        context.dispatch('getWorkouts',{username:deleteWorkout.username})
           
     }
 }

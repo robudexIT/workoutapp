@@ -9,6 +9,8 @@
        
      },
      created(){
+        console.log('Getting cookie')
+        console.log(document.cookie)
      }
    }
 </script>

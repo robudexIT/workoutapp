@@ -1,9 +1,9 @@
 
 <template>
     <div>
-        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" v-if="!currentUser && !token">Login</button>
+        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" v-if="!currentUser && !token" >Login</button>
          <button style="width:auto;" v-if="currentUser && token" @click="signoutUser">Logout</button>
-        <div id="id01" class="modal">
+        <div id="id01" class="modal" v-show="!currentUser && !token">
   
             <form class="modal-content animate"  method="post" @submit.prevent="signinUser">
                 <div class="imgcontainer">
@@ -46,7 +46,8 @@ export default {
         async signinUser(){
             try {
                await this.$store.dispatch('auth/signinAndsignupUser', {username:this.username, password:this.password,option:'signin'})
-                // this.$router.go()
+               console.log(this.$store.getters['auth/getUser'].username)
+               this.$router.push({path: '/'})
                 
             }catch(error){
                 console.log(error)
@@ -56,7 +57,7 @@ export default {
         async signoutUser(){
           try{
             await this.$store.dispatch('auth/signoutUser')
-            // this.$router.go()
+             this.$router.push({path: '/'})
           }catch(error){
             console.log(error)
           }
@@ -73,8 +74,8 @@ export default {
             return this.currentUser && this.token ? 'Logout' : 'Login'
         }
     },
-    created(){
-        this.$store.dispatch('auth/checkIfCurrentIsLogin')
+    mounted(){
+      this.$store.dispatch('auth/checkIfCurrentIsLogin')
     }
 }
 </script>

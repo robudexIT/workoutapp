@@ -2,4 +2,8 @@ node_modules
 .env
 backend/node_modules
 backend/.env
+backend/.key.pem
+backend/key.pem
+backend/.cert.pem
+backend/cert.pem
 frontend/node_modules

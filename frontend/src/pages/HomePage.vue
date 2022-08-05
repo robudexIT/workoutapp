@@ -20,8 +20,9 @@
             return this.currentUser && this.token ? 'Logout' : 'Login'
         }
     },
-    created(){
+    mounted(){
         this.$store.dispatch('auth/checkIfCurrentIsLogin')
+        
     }
   }
 </script>
@@ -31,9 +32,9 @@
    <div class="home">
         
         <div class="workouts">
-            <workout-details  v-if="currentUser && token" :currentUser="currentUser" :token="token"></workout-details>
+            <workout-details  v-if="currentUser && token" :currentUser="currentUser" ></workout-details>
         </div>
-        <workout-form v-if="currentUser && token" :currentUser="currentUser" :token="token"></workout-form>
+        <workout-form v-if="currentUser && token" :currentUser="currentUser" ></workout-form>
    </div>
 </template>
 

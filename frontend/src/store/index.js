@@ -11,7 +11,7 @@ const store = createStore({
     state(){
         return {
             fromMainStore: '',
-            apiAddr: 'http://210.1.86.214:3000'
+            apiAddr: 'http://localhost:3000'
         }
     },
     getters:{
