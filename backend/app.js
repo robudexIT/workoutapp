@@ -29,15 +29,15 @@ const connectDB = async() => {
       //   app.listen(PORT, () => {
       //       console.log('App is running on port ', PORT)
       //   })
-      https.createServer(
-         {
-            key: fs.readFileSync("key.pem"),
-            cert: fs.readFileSync("cert.pem")
-         },
-         app
-      ).listen(PORT_SECURE, () =>{
-         console.log('App is running on  secure port', PORT_SECURE)
-      })
+      // https.createServer(
+      //    {
+      //       key: fs.readFileSync("key.pem"),
+      //       cert: fs.readFileSync("cert.pem")
+      //    },
+      //    app
+      // ).listen(PORT_SECURE, () =>{
+      //    console.log('App is running on  secure port', PORT_SECURE)
+      // })
       http.createServer(app).listen(PORT, () => {
          console.log('App is running on', PORT)
       })
