@@ -62,6 +62,7 @@ function setCustomHeaders(req, res, next) {
       res.setHeader('Vary', 'Origin')
      }else{
       console.log('origin is all')
+      console.log(origin)
       res.setHeader('Access-Control-Allow-Origin', '*');
      }
      
