@@ -26,21 +26,24 @@ const connectDB = async() => {
      try{
         await db.authenticate()
         console.log('Successfully Connect to db')
-      //   app.listen(PORT, () => {
-      //       console.log('App is running on port ', PORT)
-      //   })
-      // https.createServer(
-      //    {
-      //       key: fs.readFileSync("key.pem"),
-      //       cert: fs.readFileSync("cert.pem")
-      //    },
-      //    app
-      // ).listen(PORT_SECURE, () =>{
-      //    console.log('App is running on  secure port', PORT_SECURE)
-      // })
-      http.createServer(app).listen(PORT, () => {
-         console.log('App is running on', PORT)
-      })
+        app.listen(PORT, () => {
+            console.log('App is running on port ', PORT)
+        })
+      //this options if you want https/ http run on the same time
+      /*
+         https.createServer(
+            {
+               key: fs.readFileSync("key.pem"),
+               cert: fs.readFileSync("cert.pem")
+            },
+            app
+         ).listen(PORT_SECURE, () =>{
+            console.log('App is running on  secure port', PORT_SECURE)
+         })
+         http.createServer(app).listen(PORT, () => {
+            console.log('App is running on', PORT)
+         })
+      */
      }catch(error){
         console.log(error)
         const err = new Error('Error in Connecting on database')
