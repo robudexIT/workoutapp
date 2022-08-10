@@ -45,7 +45,7 @@ const connectDB = async() => {
         console.log(error)
         const err = new Error('Error in Connecting on database')
         err.statusCode = 500
-        next(err)
+        
      }
     
 }
@@ -54,7 +54,7 @@ const connectDB = async() => {
 function setCustomHeaders(req, res, next) {
      // Website you wish to allow to connect
      console.log(req.headers)
-     const allowedOrigins = ['http://localhost:3000','http://localhost:5173']
+     const allowedOrigins = ['http://localhost:3000']
      const origin = req.headers.origin
      if(allowedOrigins.indexOf(origin) !== -1){
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -79,6 +79,9 @@ function setCustomHeaders(req, res, next) {
      next();
 }
 function errorHandler(error,req, res, next){
-   res.json({message: error.message, statusCode: error.statusCode})
+   if(error){
+      res.json({message: error.message, statusCode: error.statusCode})
+   }
+   
 }
 connectDB()
