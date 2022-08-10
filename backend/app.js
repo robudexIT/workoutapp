@@ -57,9 +57,11 @@ function setCustomHeaders(req, res, next) {
      const allowedOrigins = ['http://localhost:3000']
      const origin = req.headers.origin
      if(allowedOrigins.indexOf(origin) !== -1){
+      console.log(`origin is ${origin}`)
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Vary', 'Origin')
      }else{
+      console.log('origin is all')
       res.setHeader('Access-Control-Allow-Origin', '*');
      }
      
