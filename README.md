@@ -11,7 +11,7 @@ But in this implementation, we use aws apigateway as proxy to take advantage the
   - PROXY     - APIGATEWAY  (http proxy integration)
    -Database  - RDS mysql Instance
    
-# Project Feautres and Anatomy
+# Project Features and Anatomy
 - This Project is same as in cookie branch. But this time , we used seperate servers for backend and frontend to simulated cross-domain
 - We Implemented in AWS.
 - Launch two ubuntu instance (t2.micro) on default VPC
