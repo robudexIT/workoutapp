@@ -20,6 +20,9 @@
             return this.currentUser && this.token ? 'Logout' : 'Login'
         }
     },
+    created(){
+        
+    },
     mounted(){
         this.$store.dispatch('auth/checkIfCurrentIsLogin')
         

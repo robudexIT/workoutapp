@@ -6,7 +6,7 @@
 
            }
         },
-        props: ['currentUser'],
+        props: ['token','currentUser'],
         computed: {
             workouts(){
                try{

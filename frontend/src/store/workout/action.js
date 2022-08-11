@@ -9,7 +9,7 @@ export default {
                 credentials: 'include',
                     headers: {
                         'Authorization': `Bearer ${user.token}`,
-                        'Access-Control-Allow-Headers': '*',
+                        // 'Access-Control-Allow-Headers': '*',
                         'Content-Type': 'application/json',
                     }
                 
@@ -33,7 +33,7 @@ export default {
                 credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
-                    'Access-Control-Allow-Headers': '*',
+                    // 'Access-Control-Allow-Headers': '*',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload)
@@ -55,7 +55,7 @@ export default {
                 credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
-                    'Access-Control-Allow-Headers': '*',
+                    // 'Access-Control-Allow-Headers': '*',
                     'Content-Type': 'application/json',
                 },
             })
