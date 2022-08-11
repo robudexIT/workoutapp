@@ -13,5 +13,16 @@
   - After successful login, the backend issue refresh and access token and frontend save it in vuex state and in the localstorage.
   - Each request,backend issue new accessToken
   - Some routes are protected, meaning it can't be access without authentication.
+
+
+Note:This this app uses environment variables save on .env file.Please add .env file on the root of backend folder and add the following:
+- DB_HOST=<YOUR DB HOST>
+- DB_NAME=<YOUR DBNAME>
+- DB_USER=<YOUR DB_USER>
+- DB_PWD=<YOUR DB_PwD>
+- PORT=<YOUR CHOOSEN APP PORT>
+- TOKEN_SECRET=<STRING THE LONGER THE BETTER>
+
+
   
   
