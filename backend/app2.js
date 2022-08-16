@@ -15,7 +15,7 @@ app.get('/set', (req, res, next) => {
     res.end('Adding name to the memcached')
   })
 })
-apt.get('/get', (req, res, next) => {
+app.get('/get', (req, res, next) => {
   memcached.get('name', function(err, data) {
     if(err){
       console.log(err)
