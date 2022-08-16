@@ -7,7 +7,7 @@ memcached.on('reconnecting', function( details ){ sys.debug( "Total downtime cau
 
 const PORT = 3001
 app.get('/set', (req, res, next) => {
-  memcached.set('name', 'Rogmer', 30, function(err){
+  memcached.set('name', 'Rogmer',  function(err){
     if(err){
       console.log(err)
       return
