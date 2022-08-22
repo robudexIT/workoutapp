@@ -140,7 +140,7 @@ module.exports.signoutUser = async(req, res, next) => {
         tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != req.refreshToken)
         await memcached.set(req.username, JSON.stringify(tokens), 86400)
         res.clearCookie(req.refreshToken)
-        res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
+        res.cookie('deleteToken', '', {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000))})
         res.json({message:'User Loggedout', token:'' })
        }catch(error){
          console.log(error)
