@@ -31,7 +31,7 @@ module.exports = async(req, res, next) =>{
       const getSaveTokens = await memcached.get(username)
       const tokens = JSON.parse(getSaveTokens)
       console.log('The tokens get from memcached is', tokens)
-      if(tokens && tokens.refreshTokenList.findIndex(rf => rf == refreshToken)){
+      if(tokens && tokens.refreshTokenList.findIndex(rf => rf == refreshToken) != -1){
             tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != refreshToken)
             const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
             tokens.refreshTokenList.push(newRefreshToken)
