@@ -31,7 +31,7 @@ module.exports = async(req, res, next) =>{
     console.log(`tokens of user ${verifyRefreshToken.username} is`, tokens)
 
     //if accessToken of the user is not in the accessTokenList
-    if(tokens.userAccessTokenList.findIndex(actoken => actoken == token) == -1){
+    if(tokens.accessTokenList.findIndex(actoken => actoken == token) == -1){
           console.log('accessToken has been used, Request new accessToken need')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
