@@ -101,7 +101,7 @@ module.exports.signinUser = async(req, res, next) => {
             if(!getSaveTokens || getSaveTokens === 'undefined'){
                 const tokens = {}
                 tokens.refreshTokenList = [refreshToken]
-                tokens.accesTokenList = []
+                tokens.accessTokenList = []
                 await memcached.set(username, JSON.stringify(tokens), 86400)
                 // send valid response here...
                 res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
