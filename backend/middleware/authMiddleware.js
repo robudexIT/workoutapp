@@ -2,9 +2,10 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
-const userRefreshTokenList = require('../config/tokenlist').refreshToken
-const userAccessTokenList = require('../config/tokenlist').accessToken
+// const userRefreshTokenList = require('../config/tokenlist').refreshToken
+// const userAccessTokenList = require('../config/tokenlist').accessToken
 const User = require('../models/User')
+const memcached = require('../config/memcached')
 
 module.exports = async(req, res, next) =>{
   const refreshToken = req.cookies.refreshToken
@@ -25,25 +26,47 @@ module.exports = async(req, res, next) =>{
       res.status(401).json({message:'Unauthorized Access need to signin'})
       return
     }
-    
-    if(userAccessTokenList[verifyAccessToken.username] != token){
-      console.log('accessToken has been used, Request new accessToken need')
-      res.status(401).json({message:'Unauthorized Access need to signin'})
-      return
-    }
-    if(!userRefreshTokenList.hasOwnProperty(verifyRefreshToken.username) || userRefreshTokenList[verifyRefreshToken.username].findIndex(rf => rf==refreshToken) == -1){
-      console.log('user is not in userRefreshTokenList or refreshToken is not in the userArray')
-      res.status(401).json({message:'Unauthorized Access need to signin'})
-      return
-    }
-    console.log('populating values on the request object and jump to the next middleware')
-    req.accesToken = token
-    req.username = verifyRefreshToken.username
-    req.refreshToken = refreshToken
-    req.user = await User.findOne({where:{username:req.username}})
-    req.isAuthenticated  = true
-     userAccessTokenList[req.username] = ''
-    next() 
+    memcached.get(verifyRefreshToken.username, function(error,tokens){
+      if(!error){
+        tokens = JSON.parse(tokens)
+        if(tokens.accesToken != token){
+          console.log('accessToken has been used, Request new accessToken need')
+          res.status(401).json({message:'Unauthorized Access need to signin'})
+          return
+        }
+        if(tokens.refreshTokenList.findIndex(rf => rf == refreshToken)==-1){
+          console.log('user is not in userRefreshTokenList or refreshToken is not in the userArray')
+          res.status(401).json({message:'Unauthorized Access need to signin'})
+          return
+        }
+        console.log('populating values on the request object and jump to the next middleware')
+        req.accesToken = token
+        req.username = verifyRefreshToken.username
+        req.refreshToken = refreshToken
+        req.user = await User.findOne({where:{username:req.username}})
+        req.isAuthenticated  = true
+       
+        next() 
+      }
+    })
+    // if(userAccessTokenList[verifyAccessToken.username] != token){
+    //   console.log('accessToken has been used, Request new accessToken need')
+    //   res.status(401).json({message:'Unauthorized Access need to signin'})
+    //   return
+    // }
+    // if(!userRefreshTokenList.hasOwnProperty(verifyRefreshToken.username) || userRefreshTokenList[verifyRefreshToken.username].findIndex(rf => rf==refreshToken) == -1){
+    //   console.log('user is not in userRefreshTokenList or refreshToken is not in the userArray')
+    //   res.status(401).json({message:'Unauthorized Access need to signin'})
+    //   return
+    // }
+    // console.log('populating values on the request object and jump to the next middleware')
+    // req.accesToken = token
+    // req.username = verifyRefreshToken.username
+    // req.refreshToken = refreshToken
+    // req.user = await User.findOne({where:{username:req.username}})
+    // req.isAuthenticated  = true
+    //  userAccessTokenList[req.username] = ''
+    // next() 
   }catch(error){
     console.log('Error')
     console.log(error)

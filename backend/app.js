@@ -10,6 +10,8 @@ const authRoutes = require('./routes/authRoutes')
 const jwt = require('jsonwebtoken')
 const tokenSecret = process.env.TOKEN_SECRET
 const cookieParser = require('cookie-parser')
+const memcached = require('./config/memcached')
+
 
 const PORT = process.env.PORT
 const PORT_SECURE = process.env.PORT_SECURE
@@ -22,13 +24,18 @@ app.use(authRoutes)
 app.use(workoutRoutes)
 app.use(errorHandler)
 
+
 const connectDB = async() => {
      try{
-        await db.authenticate()
+       await db.authenticate()
         console.log('Successfully Connect to db')
+        
         app.listen(PORT, () => {
             console.log('App is running on port ', PORT)
+            memcached.on('failure', function( details ){ sys.error( "Server " + details.server + "went down due to: " + details.messages.join( '' ) ) });
+            memcached.on('reconnecting', function( details ){ sys.debug( "Total downtime caused by server " + details.server + " :" + details.totalDownTime + "ms")});
         })
+      
       //this options if you want https/ http run on the same time
       /*
          https.createServer(
@@ -52,7 +59,6 @@ const connectDB = async() => {
      }
     
 }
-
 
 function setCustomHeaders(req, res, next) {
      // Website you wish to allow to connect
@@ -90,4 +96,5 @@ function errorHandler(error,req, res, next){
    }
    
 }
+
 connectDB()
