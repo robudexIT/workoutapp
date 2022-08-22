@@ -38,9 +38,8 @@ module.exports = async(req, res, next) =>{
 
             const token = jwt.sign({username:username},accessTokenSecret, {expiresIn:'300sec'})
             
-            //everytime for token, always update the userAccessTokenList
-            // to make sure accessToken will be use once
-            tokens.accessToken = token
+            
+            tokens.accessTokenList.push(token)
             await memcached.set(username, JSON.stringify(tokens), 86400)
             res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
             res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})

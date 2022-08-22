@@ -29,14 +29,14 @@ module.exports = async(req, res, next) =>{
     const getSaveTokens = await memcached.get(verifyRefreshToken.username)
     const tokens = JSON.parse(getSaveTokens)
     console.log(`tokens of user ${verifyRefreshToken.username} is`, tokens)
-    if(tokens.accessToken != token){
-          console.log('access token from memcached is ',tokens.accesToken)
-          console.log('token from client is ',token)
+
+    //if accessToken of the user is not in the accessTokenList
+    if(tokens.userAccessTokenList.findIndex(actoken => actoken == token) == -1){
           console.log('accessToken has been used, Request new accessToken need')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
     }
-    if(tokens.refreshTokenList.findIndex(rf => rf == refreshToken)==-1){
+    if(tokens.refreshTokenList.findIndex(rf => rf == refreshToken) == -1){
           console.log('user is not in userRefreshTokenList or refreshToken is not in the userArray')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
@@ -46,6 +46,12 @@ module.exports = async(req, res, next) =>{
     req.username = verifyRefreshToken.username
     req.refreshToken = refreshToken
     req.user = await User.findOne({where:{username:req.username}})
+    
+    //remove accessToken to the accesTokenList after giving it to the user
+    // to make sure it will not be use again at save back to the memcached
+    tokens.accessTokenList = tokens.accessTokenList.filter(actoken => actoken != token)
+    await memcached.set(req.username, JSON.stringify(tokens), 86400)
+
     req.isAuthenticated  = true
     next() 
       

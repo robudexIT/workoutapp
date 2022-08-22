@@ -101,7 +101,7 @@ module.exports.signinUser = async(req, res, next) => {
             if(!getSaveTokens || getSaveTokens === 'undefined'){
                 const tokens = {}
                 tokens.refreshTokenList = [refreshToken]
-                tokens.accessToken= accesToken
+                tokens.accesTokenList = []
                 await memcached.set(username, JSON.stringify(tokens), 86400)
                 // send valid response here...
                 res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
@@ -110,6 +110,7 @@ module.exports.signinUser = async(req, res, next) => {
             }else{
                 const tokens = JSON.parse(getSaveTokens)
                 tokens.refreshTokenList.push(refreshToken)
+               
                 await memcached.set(username, JSON.stringify(tokens), 86400)
                 // send valid response here...
                 res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
@@ -138,7 +139,15 @@ module.exports.signoutUser = async(req, res, next) => {
         const getSaveTokens = await memcached.get(req.username)
         const tokens = JSON.parse(getSaveTokens)
         tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != req.refreshToken)
-        await memcached.set(req.username, JSON.stringify(tokens), 86400)
+        tokens.accesTokenList = tokens.accesTokenList.filter(actoken => actoken != req.token)
+        
+        //delete user completly on the memcached if there no tokens in the list
+        if(tokens.refreshTokenList.length == 0 && tokens.accesTokenList.length == 0){
+            await memcached.del(req.username)
+        }else{
+            await memcached.set(req.username, JSON.stringify(tokens), 86400)
+        }
+      
         res.clearCookie(req.refreshToken)
         res.cookie('deleteToken', '', {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000))})
         res.json({message:'User Loggedout', token:'' })
