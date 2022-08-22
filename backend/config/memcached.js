@@ -1,4 +1,4 @@
-const Memcached  = require('memcached')
+const Memcached  = require('memcached-promise')
 require('dotenv').config()
 module.exports =  new Memcached(process.env.MEMCACHED_CLUSTER_ENDPOINT)
 
@@ -7,3 +7,5 @@ module.exports =  new Memcached(process.env.MEMCACHED_CLUSTER_ENDPOINT)
 //     refreshToken: [],
 //     accessToken: []
 // }
+
+// rogmer: { resfreshToken: [], accessToken: []}

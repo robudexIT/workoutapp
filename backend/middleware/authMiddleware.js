@@ -26,29 +26,27 @@ module.exports = async(req, res, next) =>{
       res.status(401).json({message:'Unauthorized Access need to signin'})
       return
     }
-    memcached.get(verifyRefreshToken.username, function(error,tokens){
-      if(!error){
-        tokens = JSON.parse(tokens)
-        if(tokens.accesToken != token){
+    const getSaveTokens = await memcached.get(verifyRefreshToken.username)
+    const tokens = JSON.parse(getSaveTokens)
+    if(tokens.accesToken != token){
           console.log('accessToken has been used, Request new accessToken need')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
-        }
-        if(tokens.refreshTokenList.findIndex(rf => rf == refreshToken)==-1){
+    }
+    if(tokens.refreshTokenList.findIndex(rf => rf == refreshToken)==-1){
           console.log('user is not in userRefreshTokenList or refreshToken is not in the userArray')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
-        }
-        console.log('populating values on the request object and jump to the next middleware')
-        req.accesToken = token
-        req.username = verifyRefreshToken.username
-        req.refreshToken = refreshToken
-        req.user = await User.findOne({where:{username:req.username}})
-        req.isAuthenticated  = true
-       
-        next() 
-      }
-    })
+    }
+    console.log('populating values on the request object and jump to the next middleware')
+    req.accesToken = token
+    req.username = verifyRefreshToken.username
+    req.refreshToken = refreshToken
+    req.user = await User.findOne({where:{username:req.username}})
+    req.isAuthenticated  = true
+    next() 
+      
+    
     // if(userAccessTokenList[verifyAccessToken.username] != token){
     //   console.log('accessToken has been used, Request new accessToken need')
     //   res.status(401).json({message:'Unauthorized Access need to signin'})

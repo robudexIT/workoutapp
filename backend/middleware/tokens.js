@@ -28,10 +28,9 @@ module.exports = async(req, res, next) =>{
          res.status(401).json({message:'Unauthorized Access'})
         return
       }
-      memcached.get(username, function(error, tokens){
-        if(!error){
-          if(tokens && JSON.parse(tokens).refreshTokenList.findIndex(rf => rf == refreshToken)!= -1){
-            tokens = JSON.parse(tokens)
+      const getSaveTokens = await memcached.get(username)
+      const tokens = JSON.parse(getSaveTokens)
+      if(tokens && tokens.refreshTokenList.findIndex(rf => rf == refreshToken)){
             tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != refreshToken)
             const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
             tokens.refreshTokenList.push(newRefreshToken)
@@ -41,19 +40,37 @@ module.exports = async(req, res, next) =>{
             //everytime for token, always update the userAccessTokenList
             // to make sure accessToken will be use once
             tokens.accessToken = token
-            memcached.set(username, JSON.stringify(tokens), 86400, function(error){
-              if(!error){
-                res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-                res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
-                return
-              }
-            }) 
+            await memcached.set(username, JSON.stringify(tokens), 86400)
+            res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+            res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
+            return
+      }
+      // memcached.get(username, function(error, tokens){
+      //   if(!error){
+      //     if(tokens && JSON.parse(tokens).refreshTokenList.findIndex(rf => rf == refreshToken)!= -1){
+      //       tokens = JSON.parse(tokens)
+      //       tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != refreshToken)
+      //       const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
+      //       tokens.refreshTokenList.push(newRefreshToken)
+
+      //       const token = jwt.sign({username:username},accessTokenSecret, {expiresIn:'300sec'})
             
-          }
-          return
-        }
+      //       //everytime for token, always update the userAccessTokenList
+      //       // to make sure accessToken will be use once
+      //       tokens.accessToken = token
+      //       memcached.set(username, JSON.stringify(tokens), 86400, function(error){
+      //         if(!error){
+      //           res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+      //           res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
+      //           return
+      //         }
+      //       }) 
+            
+      //     }
+      //     return
+      //   }
         
-      })
+      // })
       // console.log('User must be property of userRefreshTokenList and refreshToken must be in user array')
       // if (userRefreshTokenList.hasOwnProperty(username) && userRefreshTokenList[username].findIndex(rf => rf == refreshToken) != -1) {  
          

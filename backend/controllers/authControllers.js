@@ -97,38 +97,26 @@ module.exports.signinUser = async(req, res, next) => {
             //     userRefreshTokenList[username] = []
             //     userRefreshTokenList[username].push(refreshToken)
             // }
-            
-            memcached.get(username, (error, tokens) => {
-                if(!error){
-                    if(!tokens || tokens === undefined){
-                        const tokens = {}
-                        tokens.refreshTokenList = [refreshToken]
-                        tokens.accessToken= accesToken
-                        memcached.set(username, JSON.stringify(tokens),86400, function(error){
-                            if(!error){
-                                // send valid response here...
-                                res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-                                const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
-                                res.status(200).json(response)
-                            }
-                        } )
-    
-                    }else{
-                        tokens = JSON.parse(tokens)
-                        tokens.refreshToken.push(refreshToken)
-                        memcached.set(username, JSON.stringify(tokens), 86400, function(error){
-                            if(!error){
-                                // send valid response here...
-                                res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-                                const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
-                                res.status(200).json(response)
-                            }
-                        })
-                    }
-                }
-                
-            } )
-            
+            const getSaveTokens = await memcached.get(username)
+            if(!getSaveTokens || getSaveTokens === 'undefined'){
+                const tokens = {}
+                tokens.refreshTokenList = [refreshToken]
+                tokens.accessToken= accesToken
+                await memcached.set(username, JSON.stringify(tokens), 86400)
+                // send valid response here...
+                res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+                const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
+                res.status(200).json(response)
+            }else{
+                const tokens = JSON.parse(getSaveTokens)
+                tokens.refreshToken.push(refreshToken)
+                await memcached.set(username, JSON.stringify(tokens), 86400)
+                // send valid response here...
+                res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
+                const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
+                res.status(200).json(response)
+            }
+           
             // sameSite:true,secure:true
             // res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
             // const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
@@ -144,21 +132,22 @@ module.exports.signinUser = async(req, res, next) => {
         }
     }
 },
-module.exports.signoutUser = (req, res, next) => {
+module.exports.signoutUser = async(req, res, next) => {
     if(req.isAuthenticated){
-        memcached.get(req.username, function(error, tokens){
-            if(!error){
-                tokens = JSON.parse(tokens)
-                tokens.refreshTokenList = tokens.refreshTokenList.filter(rf=> rf != req.refreshToken)
-                memcached.set(req.username, JSON.stringify(tokens), 86400, function(error){
-                    if(!error){
-                        res.clearCookie(req.refreshToken)
-                        res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
-                        res.json({message:'User Loggedout', token:'' })
-                    }
-                })
-            }
-        })
+       try{
+        const getSaveTokens = await memcached.get(req.username)
+        const tokens = JSON.parse(getSaveTokens)
+        tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != req.refreshToken)
+        await memcached.set(req.username, JSON.stringify(tokens), 86400)
+        res.clearCookie(req.refreshToken)
+        res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
+        res.json({message:'User Loggedout', token:'' })
+       }catch(error){
+         console.log(error)
+         res.status(401).json({message:'Error in Signing out', token:'' })
+       }
+       
+      
         // userRefreshTokenList[req.username] = userRefreshTokenList[req.username].filter(rf => rf != req.refreshToken) 
         // res.clearCookie(req.refreshToken)
         // res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
