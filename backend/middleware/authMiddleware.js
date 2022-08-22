@@ -28,6 +28,7 @@ module.exports = async(req, res, next) =>{
     }
     const getSaveTokens = await memcached.get(verifyRefreshToken.username)
     const tokens = JSON.parse(getSaveTokens)
+    console.log(`tokens of user ${verifyRefreshToken.username} is`, tokens)
     if(tokens.accesToken != token){
           console.log('access token from memcached is ',tokens.accesToken)
           console.log('token from client is ',token)
