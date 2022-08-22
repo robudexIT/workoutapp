@@ -29,6 +29,8 @@ module.exports = async(req, res, next) =>{
     const getSaveTokens = await memcached.get(verifyRefreshToken.username)
     const tokens = JSON.parse(getSaveTokens)
     if(tokens.accesToken != token){
+          console.log(tokens.accesToken)
+          console.log(token)
           console.log('accessToken has been used, Request new accessToken need')
           res.status(401).json({message:'Unauthorized Access need to signin'})
           return
