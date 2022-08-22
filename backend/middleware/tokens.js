@@ -30,6 +30,7 @@ module.exports = async(req, res, next) =>{
       }
       const getSaveTokens = await memcached.get(username)
       const tokens = JSON.parse(getSaveTokens)
+      console.log('The tokens get from memcached is', tokens)
       if(tokens && tokens.refreshTokenList.findIndex(rf => rf == refreshToken)){
             tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != refreshToken)
             const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
@@ -45,57 +46,7 @@ module.exports = async(req, res, next) =>{
             res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
             return
       }
-      // memcached.get(username, function(error, tokens){
-      //   if(!error){
-      //     if(tokens && JSON.parse(tokens).refreshTokenList.findIndex(rf => rf == refreshToken)!= -1){
-      //       tokens = JSON.parse(tokens)
-      //       tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != refreshToken)
-      //       const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
-      //       tokens.refreshTokenList.push(newRefreshToken)
-
-      //       const token = jwt.sign({username:username},accessTokenSecret, {expiresIn:'300sec'})
-            
-      //       //everytime for token, always update the userAccessTokenList
-      //       // to make sure accessToken will be use once
-      //       tokens.accessToken = token
-      //       memcached.set(username, JSON.stringify(tokens), 86400, function(error){
-      //         if(!error){
-      //           res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-      //           res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
-      //           return
-      //         }
-      //       }) 
-            
-      //     }
-      //     return
-      //   }
-        
-      // })
-      // console.log('User must be property of userRefreshTokenList and refreshToken must be in user array')
-      // if (userRefreshTokenList.hasOwnProperty(username) && userRefreshTokenList[username].findIndex(rf => rf == refreshToken) != -1) {  
-         
-      //     console.log('Rotating the user refreshToken and send the new refreshToken to the client')
-      //     userRefreshTokenList[username] = userRefreshTokenList[username].filter(token => token != refreshToken)
-      //     const newRefreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})
-      //     userRefreshTokenList[username].push(newRefreshToken)
-
-      //     const token = jwt.sign({username:username},accessTokenSecret, {expiresIn:'300sec'})
-          
-      //     //everytime for token, always update the userAccessTokenList
-      //     // to make sure accessToken will be use once
-      //     userAccessTokenList[username] = token
-
-      //     res.cookie('refreshToken', newRefreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-      //     res.status(200).json({message:'Recieve new access token', username: username,token:token,rcvToken:true,expires: Date.now()+ (60000*5)})
-      //     return
-         
-      //  }else{
-      //   console.log('user and refreshToken is not found in the userRefreshTokenList')
-      //   res.clearCookie(refreshToken)
-      //   res.status(401).json({message:'Unauthorized Access'})
-      //   return
-      //  } 
-
+      
         console.log('user and refreshToken is not found in the userRefreshTokenList')
         res.clearCookie(refreshToken)
         res.status(401).json({message:'Unauthorized Access'})
