@@ -29,7 +29,7 @@ module.exports = async(req, res, next) =>{
     const getSaveTokens = await memcached.get(verifyRefreshToken.username)
     const tokens = JSON.parse(getSaveTokens)
     console.log(`tokens of user ${verifyRefreshToken.username} is`, tokens)
-    if(tokens.accesToken != token){
+    if(tokens.accessToken != token){
           console.log('access token from memcached is ',tokens.accesToken)
           console.log('token from client is ',token)
           console.log('accessToken has been used, Request new accessToken need')
@@ -42,7 +42,7 @@ module.exports = async(req, res, next) =>{
           return
     }
     console.log('populating values on the request object and jump to the next middleware')
-    req.accesToken = token
+    req.accessToken = token
     req.username = verifyRefreshToken.username
     req.refreshToken = refreshToken
     req.user = await User.findOne({where:{username:req.username}})
