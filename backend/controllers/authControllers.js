@@ -139,7 +139,7 @@ module.exports.signoutUser = async(req, res, next) => {
         const getSaveTokens = await memcached.get(req.username)
         const tokens = JSON.parse(getSaveTokens)
         tokens.refreshTokenList = tokens.refreshTokenList.filter(rf => rf != req.refreshToken)
-        tokens.accessTokenList = tokens.accessTokenList.filter(actoken => actoken != req.token)
+        tokens.accessTokenList = tokens.accessTokenList.filter(actoken => actoken != req.accesToken)
         
         //delete user completly on the memcached if there no tokens in the list
         if(tokens.refreshTokenList.length == 0 && tokens.accessTokenList.length == 0){
