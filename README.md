@@ -18,8 +18,14 @@ But in this implementation, we use aws apigateway as proxy to take advantage the
 - Launch RDS Instance on default VPC
 - SETUP The necessary permission on Security Groups
 - on EC2 backend and frontend  clone this repo.
-  (make sure to run npm install on each project)
- -Navigate to AWS APIGATEway, Click APIs the <Click Create> API button. Under REST API import the workoutapi.yaml swagger file
+  (make sure to run npm install on each project  to start on backend run npm start, for frontend just run npm run dev or npm run build for production )
+ - SETUP The necessary permission on Security Groups
+- Navigate to AWS APIGATEway, Click APIs the <Click Create> API button. Under REST API import the workoutapi.yaml swagger file
+- on the Integration Request of each method, udpate Enpooint Url: of your ec2 instance, (ie  http://ec2-54-213-192-152.us-west-2.compute.amazonaws.com:3000/getworkouts, enable CORS with these options
+   Access-Control-Allow-Headers: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Access-Control-Allow-Headers'
+   Access-Control-Allow-Origin*: 'your ec2 instance frontend endpoint'
+   Access-Control-Allow-Credentials: 'true'
+- Deploy the API
   
  
  
