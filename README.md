@@ -9,7 +9,7 @@ But in this implementation, we use aws apigateway as proxy to take advantage the
   - Backend  - nodejs/express running EC2
   - Fronted  - vuejs running on EC2
   - PROXY     - APIGATEWAY  (http proxy integration)
-   -Database  - RDS mysql Instance
+  - Database  - RDS mysql Instance
    
 # Project Features and Anatomy
 - This Project is same as in cookie branch. But this time , we used seperate servers for backend and frontend to simulated cross-domain
