@@ -91,12 +91,7 @@ module.exports.signinUser = async(req, res, next) => {
             // generate refreshtoken here
             const refreshToken = jwt.sign({username:username}, refreshTokenSecret, {expiresIn: '1d'})  // crypto.randomBytes(32).toString('hex')
             const accesToken = jwt.sign({username:username}, accessTokenSecret, {expiresIn:'300sec'})
-            // if(userRefreshTokenList.hasOwnProperty(username)){
-            //     userRefreshTokenList[username].push(refreshToken)
-            // }else{
-            //     userRefreshTokenList[username] = []
-            //     userRefreshTokenList[username].push(refreshToken)
-            // }
+           
             const getSaveTokens = await memcached.get(username)
             if(!getSaveTokens || getSaveTokens === 'undefined'){
                 const tokens = {}
@@ -118,14 +113,7 @@ module.exports.signinUser = async(req, res, next) => {
                 res.status(200).json(response)
             }
            
-            // sameSite:true,secure:true
-            // res.cookie('refreshToken', refreshToken, {secure:true,sameSite:'None',httpOnly:true, expires: new Date(Date.now() +(1000*60*60))})
-            // const response = {message:'User has successfully signed in', signin:true,username:user.username, token:accesToken,expires:Date.now()+ (60000*5)}
-            
-            // console.log(userRefreshTokenList.length)
-            // console.log(userRefreshTokenList)
-            // console.log(res)
-            // res.status(200).json(response)
+          
             
         }catch(error){
             console.log(error)
@@ -156,11 +144,6 @@ module.exports.signoutUser = async(req, res, next) => {
          res.status(401).json({message:'Error in Signing out', token:'' })
        }
        
-      
-        // userRefreshTokenList[req.username] = userRefreshTokenList[req.username].filter(rf => rf != req.refreshToken) 
-        // res.clearCookie(req.refreshToken)
-        // res.cookie('deleteToken', '', {sameSite:true,secure:true,httpOnly:true, expires: 500})
-        // res.json({message:'User Loggedout', token:'' })
     }
     
 }
