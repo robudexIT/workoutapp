@@ -7,7 +7,7 @@ But in this implementation, we use aws apigateway as proxy to take advantage the
 
 # Project Architecture 
   - Backend  - nodejs/express running EC2
-  - Fronted  - vuejs running on EC2
+  - Frontned  - vuejs running on EC2
   - PROXY     - APIGATEWAY  (http proxy integration)
   - Database  - RDS mysql Instance
    
