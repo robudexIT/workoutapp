@@ -11,7 +11,7 @@ This branch is same us cookie-cross-domain branch, with additional caching layer
 # Project Features and Anatomy
 - This Project is same as in cookie branch. But this time , we used seperate servers for backend and frontend to simulated cross-domain
 - We Implemented in AWS.
-- Launch  ubuntu instance (t2.micro)  for backend on default VPC and download the backend project on this instance (run npm install on the project folder)
+- Launch  ubuntu instance (t2.micro)  for backend on default VPC and download the backend project on this instance (run npm install on the project folder and run npm run start)
 - Launch RDS Instance on default VPC
 - For Elasticached follow heres the docs https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/GettingStarted.html
 - SETUP The necessary permission on Security Groups
