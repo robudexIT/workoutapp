@@ -22,7 +22,8 @@ const connectDB = async() => {
         app.listen(PORT, () => {
             console.log('App is running on port ', PORT)
         })
-     }catch(error){
+     }catch(error){]
+        console.log('This section will output the error')
         console.log(error)
      }
     
