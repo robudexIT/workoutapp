@@ -8,6 +8,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "dev2": "nodemon app2.js"
+    "lint": "npx standard --fix"
   },
   "author": "Rogmer Bulaclac",
   "license": "ISC",
