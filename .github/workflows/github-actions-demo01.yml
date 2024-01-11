@@ -1,11 +1,12 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
-  push: 
-    paths: 
-      - "backend/**"
-    branches:
-      - "main"
+  # push: 
+  #   paths: 
+  #     - "backend/**"
+  #   branches:
+  #     - "main"
+  workflow_dispath:
 
 
 
