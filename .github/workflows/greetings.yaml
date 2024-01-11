@@ -9,11 +9,11 @@ env:
 jobs:
   greeting_job:
     runs-on: ubuntu-latest
-    env: 
+    env:
       Greeting: Hello
-
     steps:
-      - name: "Say Hello Rogmer it's Monday"
+      - name: "Say Hello Mona it's Monday"
         run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
         env:
-          First_Name: Rogmer
+          First_Name: Mona
+
