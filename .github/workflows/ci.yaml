@@ -2,7 +2,7 @@ name: Continous Integration Workflow
 on:
   push:
     branches: 
-      - main
+      - localstorage
     paths: 
       -  "backend/**"
 
